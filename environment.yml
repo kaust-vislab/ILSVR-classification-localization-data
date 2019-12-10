@@ -1,0 +1,6 @@
+name: null
+
+dependencies:
+  - ipython=7.10
+  - python=3.7
+  - scipy=1.3

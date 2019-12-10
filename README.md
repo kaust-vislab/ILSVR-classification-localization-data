@@ -4,10 +4,10 @@ This repo contains a build script for the [Imagenet](http://www.image-net.org/) 
 After cloning the repository, in order to use the build script, you will first need to 
 obtain an account with Imagenet and then download the following files.
 
-1. ILSVRC2012_devkit_t12.tar.gz
-2. ILSVRC2012_img_train.tar
-3. ILSVRC2012_img_val.tar
-4. ILSVRC2012_img_test_v10102019.tar
+1. `ILSVRC2012_devkit_t12.tar.gz`
+2. `ILSVRC2012_img_train.tar`
+3. `ILSVRC2012_img_val.tar`
+4. `ILSVRC2012_img_test_v10102019.tar`
 
 File 1 containing the Imagenet development kit should be moved into the `./src` directory 
 and then extracted.

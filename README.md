@@ -40,5 +40,5 @@ respectively.
 
 ```bash
 $ cd ./src
-$ python build_classification_localization_data.py
+$ python build-imagenet-datasets.py
 ```

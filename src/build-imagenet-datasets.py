@@ -27,9 +27,17 @@ created using the following files included in the ImageNet development kit.
 
 Sample usage:
 
-    $ python build_classification_localization_data.py
+Default behavior is to build all of the train, val, and test datasets.
+
+    $ python build-imagenet-datasets.py
+
+You can also choose to build only some of the datasets.
+
+    $ python build-imagenet-datasets.py --no-val --no-test  # only builds train
+    $ python build-imagenet-datasets.py --no-train --no-test  # only build val
 
 """
+import argparse
 import glob
 import os
 import tarfile
@@ -79,19 +87,22 @@ def extract_validation_images(prefix):
     print("Successfully extracted validation images!")
 
 
-if __name__ == "__main__":
+parser = argparse.ArgumentParser()
+parser.add_argument("--train", default=True, action="store_true")
+parser.add_argument("--no-train", dest="train", action="store_false")
+parser.add_argument("--val", default=True, action="store_true")
+parser.add_argument("--no-val", dest="val", action="store_false")
+parser.add_argument("--test", default=True, action="store_true")
+parser.add_argument("--no-test", dest="test", action="store_false")
+args = parser.parse_args()
 
-    # extract the images from the provided .tar files
-    _prefix = f"{DATA_DIR}/jpeg"  # the TESTING_TAR includes a test/ dir already
-    if not os.path.isdir(_prefix):
-        os.makedirs(_prefix)
-    extract_testing_images(_prefix)
-
+if args.train:
     _prefix = f"{DATA_DIR}/jpeg/train"
     if not os.path.isdir(_prefix):
         os.makedirs(_prefix)
     extract_training_images(_prefix)
 
+if args.val:
     _prefix = f"{DATA_DIR}/jpeg/val"
     if not os.path.isdir(_prefix):
         os.makedirs(_prefix)
@@ -118,4 +129,9 @@ if __name__ == "__main__":
         dst_image_path = f"{synset_path}/{validation_image}"
         os.rename(src_image_path, dst_image_path)
     assert(len(glob.glob(f"{prefix}/*.JPEG")) == 0)
-    print("Successfully built the Imagenet classification and localization data set!")
+
+if args.test:
+    _prefix = f"{DATA_DIR}/jpeg"  # the TESTING_TAR includes a test/ dir already
+    if not os.path.isdir(_prefix):
+        os.makedirs(_prefix)
+    extract_testing_images(_prefix)

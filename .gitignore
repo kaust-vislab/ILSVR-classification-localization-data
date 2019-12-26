@@ -128,3 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# ignore the data directory
+data/
+src/ILSVRC2012_devkit_t12.tar.gz
+src/ILSVRC2012_devkit_t12/

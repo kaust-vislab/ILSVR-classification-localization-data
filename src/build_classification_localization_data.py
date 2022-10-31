@@ -50,7 +50,26 @@ VALIDATION_TAR_MD5 = "29b22e2961454d5413ddabcf34fc5622"
 
 def extract_testing_images(prefix):
     with tarfile.open(TESTING_TAR) as tf:
-        tf.extractall(path=prefix)
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(tf, path=prefix)
     n_test_images = len(glob.glob(f"{prefix}/test/*.JPEG"))
     assert n_test_images == 100000
     print("Successfully extracted testing images!")
@@ -64,7 +83,26 @@ def extract_training_images(prefix):
             os.mkdir(synset_path)
             tf.extract(member, path=synset_path)
             with tarfile.open(f"{synset_path}/{member.name}") as class_tf:
-                class_tf.extractall(path=synset_path)
+                def is_within_directory(directory, target):
+                    
+                    abs_directory = os.path.abspath(directory)
+                    abs_target = os.path.abspath(target)
+                
+                    prefix = os.path.commonprefix([abs_directory, abs_target])
+                    
+                    return prefix == abs_directory
+                
+                def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+                
+                    for member in tar.getmembers():
+                        member_path = os.path.join(path, member.name)
+                        if not is_within_directory(path, member_path):
+                            raise Exception("Attempted Path Traversal in Tar File")
+                
+                    tar.extractall(path, members, numeric_owner=numeric_owner) 
+                    
+                
+                safe_extract(class_tf, path=synset_path)
             os.remove(f"{synset_path}/{member.name}")
     n_training_images = len(glob.glob(f"{prefix}/n*/*.JPEG"))
     assert n_training_images == 1281167
@@ -73,7 +111,26 @@ def extract_training_images(prefix):
 
 def extract_validation_images(prefix):
     with tarfile.open(VALIDATION_TAR) as tf:
-        tf.extractall(path=prefix)
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(tf, path=prefix)
     n_validation_images = len(glob.glob(f"{prefix}/*"))
     assert n_validation_images == 50000
     print("Successfully extracted validation images!")
